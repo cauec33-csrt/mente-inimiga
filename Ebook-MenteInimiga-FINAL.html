@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0D0F14">
+<title>Método Mente Inimiga</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0D0F14;
+  --bg2: #13161E;
+  --bg3: #191D28;
+  --text: #F2F0EB;
+  --muted: #8A8FA8;
+  --accent: #7B68EE;
+  --accent-light: #A89EF5;
+  --cta: #E8A87C;
+  --success: #68C68A;
+  --danger: #E07070;
+  --border: rgba(255,255,255,0.07);
+  --border-accent: rgba(123,104,238,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── CAPA ── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-glow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(320px, 90vw);
+  height: min(320px, 90vw);
+  background: radial-gradient(circle, rgba(123,104,238,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(123,104,238,0.1);
+  border: 1px solid rgba(123,104,238,0.35);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.cover-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 10vw, 58px);
+  font-weight: 900;
+  line-height: 1.08;
+  color: var(--text);
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.cover-title em {
+  font-style: italic;
+  color: var(--accent);
+  display: block;
+}
+
+.cover-sub {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(14px, 4vw, 18px);
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 32px;
+  max-width: 320px;
+  line-height: 1.5;
+  position: relative;
+}
+
+.cover-perfis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 36px;
+  position: relative;
+}
+
+.cp-item {
+  background: rgba(123,104,238,0.08);
+  border: 1px solid rgba(123,104,238,0.25);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.cp-mode {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.cp-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  line-height: 1.3;
+}
+
+.cover-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.cs-item { text-align: center; }
+.cs-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
+  display: block;
+}
+.cs-lbl {
+  font-size: 11px;
+  color: var(--muted);
+  display: block;
+}
+.cs-div {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+}
+
+/* ── NAVEGAÇÃO ── */
+.nav-toc {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.nav-toc::-webkit-scrollbar { display: none; }
+
+.nav-inner {
+  display: flex;
+  gap: 0;
+  min-width: max-content;
+  padding: 0 16px;
+}
+
+.nav-item {
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent);
+}
+
+/* ── PÁGINA ── */
+.page {
+  padding: 40px 20px 60px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── SECTION HEADER ── */
+.sec-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 7vw, 34px);
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.sec-title em { font-style: italic; color: var(--accent); }
+
+.sec-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  margin-bottom: 28px;
+  opacity: 0.3;
+}
+
+/* ── TEXTO ── */
+p {
+  color: var(--muted);
+  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+p strong { color: var(--text); font-weight: 700; }
+p em { font-style: italic; color: var(--accent-light); }
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 5vw, 24px);
+  font-weight: 700;
+  color: var(--text);
+  margin: 28px 0 12px;
+  line-height: 1.3;
+}
+
+h2 em { font-style: italic; color: var(--accent); }
+
+/* ── AVISO ── */
+.aviso {
+  background: rgba(123,104,238,0.06);
+  border: 1px solid rgba(123,104,238,0.2);
+  border-left: 3px solid var(--accent);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 20px 0;
+}
+
+.aviso p { margin: 0; font-size: 14px; }
+
+/* ── CARD BASE ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.card.accent {
+  border-color: var(--border-accent);
+}
+
+/* ── MÉTODO ── */
+.metodo-card {
+  background: var(--bg2);
+  border: 1px solid var(--border-accent);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin: 20px 0;
+}
+
+.metodo-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.metodo-titulo em { font-style: italic; color: var(--accent); }
+
+.metodo-sub {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.etapas {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.etapa {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.etapa-num {
+  width: 36px;
+  height: 36px;
+  background: rgba(123,104,238,0.12);
+  border: 1px solid rgba(123,104,238,0.3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.etapa-body { flex: 1; padding-top: 4px; }
+
+.etapa-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.etapa-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── PERFIS ── */
+.perfil-card {
+  background: var(--bg2);
+  border: 1px solid var(--border-accent);
+  border-radius: 14px;
+  padding: 18px;
+  margin: 12px 0;
+}
+
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.perfil-modo {
+  background: rgba(123,104,238,0.1);
+  border: 1px solid rgba(123,104,238,0.25);
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 58px;
+}
+
+.pm-tag {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pm-letra {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  display: block;
+}
+
+.perfil-info { flex: 1; }
+
+.perfil-nome {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.perfil-sub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.perfil-signs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sign {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.sign::before {
+  content: '·';
+  color: var(--accent);
+  font-weight: 900;
+  flex-shrink: 0;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+/* ── PROTOCOLO HEADER ── */
+.proto-header {
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  border: 1px solid var(--border-accent);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+}
+
+.proto-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.proto-nome {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 6vw, 30px);
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.proto-nome em { font-style: italic; color: var(--accent); }
+
+.proto-sub {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── TÉCNICA ── */
+.tecnica {
+  background: rgba(123,104,238,0.04);
+  border: 1px solid rgba(123,104,238,0.18);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.tec-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.tec-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.tec-intro {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.65;
+}
+
+.tec-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ts {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ts-num {
+  width: 26px;
+  height: 26px;
+  background: rgba(123,104,238,0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ts-body { flex: 1; }
+.ts-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.ts-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ── PROTOCOLO NOTURNO ── */
+.noturno-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.ng-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.ng-time {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.ng-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.ng-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+/* ── PLANO 7 DIAS ── */
+.plano {
+  margin: 20px 0;
+}
+
+.plano-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.dias {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dia {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.dia-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.45;
+  min-width: 28px;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.dia-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.dia-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+/* ── INFO BOX ── */
+.info-box {
+  background: rgba(232,168,124,0.05);
+  border: 1px solid rgba(232,168,124,0.2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+
+.ib-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cta);
+  margin-bottom: 5px;
+}
+
+.info-box p { margin: 0; font-size: 13px; color: var(--text); line-height: 1.65; }
+
+/* ── SEPARADOR DE SEÇÃO ── */
+.section-break {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+
+/* ── FECHAMENTO ── */
+.fechamento {
+  text-align: center;
+  padding: 48px 20px 80px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.fecha-icon {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.fecha-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 7vw, 34px);
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.fecha-title em { font-style: italic; color: var(--accent); }
+
+.fecha-body {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.fecha-body strong { color: var(--text); }
+
+.fecha-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(123,104,238,0.5), transparent);
+  margin: 24px auto;
+}
+
+.fecha-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.fecha-marca {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── BOTÃO VOLTAR AO TOPO ── */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(123,104,238,0.4);
+  opacity: 0;
+  transition: opacity 0.3s;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 200;
+}
+
+.back-to-top.visible { opacity: 1; }
+
+/* ── RODAPÉ ── */
+.footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 20px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* ── MOBILE REFINEMENTS ── */
+@media (max-width: 380px) {
+  .page { padding: 32px 16px 48px; }
+  .cover { padding: 40px 16px 48px; }
+  .noturno-grid { grid-template-columns: 1fr; }
+  .cover-perfis { grid-template-columns: 1fr 1fr; }
+  .sec-title { font-size: 22px; }
+  .proto-nome { font-size: 20px; }
+}
+
+@media (min-width: 640px) {
+  .page { padding: 56px 32px 80px; }
+  .cover { padding: 80px 40px; }
+  .noturno-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body id="top">
+
+<!-- ══ CAPA ══ -->
+<section class="cover">
+  <div class="cover-glow"></div>
+  <div class="cover-badge">✦ Produto Digital · Uso Pessoal</div>
+  <div class="cover-eyebrow">Mecanismo Proprietário</div>
+  <h1 class="cover-title">Método<br><em>Mente Inimiga</em></h1>
+  <p class="cover-sub">Identifique como sua própria mente opera contra você — e vire o jogo em 7 dias.</p>
+
+  <div class="cover-perfis">
+    <div class="cp-item">
+      <span class="cp-mode">Modo</span>
+      <span class="cp-name">Antecipação</span>
+    </div>
+    <div class="cp-item">
+      <span class="cp-mode">Modo</span>
+      <span class="cp-name">Loop</span>
+    </div>
+    <div class="cp-item">
+      <span class="cp-mode">Modo</span>
+      <span class="cp-name">Julgamento</span>
+    </div>
+    <div class="cp-item">
+      <span class="cp-mode">Modo</span>
+      <span class="cp-name">Sobrecarga</span>
+    </div>
+  </div>
+
+  <div class="cover-stats">
+    <div class="cs-item">
+      <span class="cs-num">7 dias</span>
+      <span class="cs-lbl">de protocolo</span>
+    </div>
+    <div class="cs-div"></div>
+    <div class="cs-item">
+      <span class="cs-num">4 modos</span>
+      <span class="cs-lbl">de operação</span>
+    </div>
+    <div class="cs-div"></div>
+    <div class="cs-item">
+      <span class="cs-num">5–15 min</span>
+      <span class="cs-lbl">por dia</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NAVEGAÇÃO ══ -->
+<nav class="nav-toc" id="nav">
+  <div class="nav-inner">
+    <a class="nav-item" href="#intro">Início</a>
+    <a class="nav-item" href="#entenda">Entenda</a>
+    <a class="nav-item" href="#perfis">Perfis</a>
+    <a class="nav-item" href="#antecipacao">Antecipação</a>
+    <a class="nav-item" href="#loop">Loop</a>
+    <a class="nav-item" href="#julgamento">Julgamento</a>
+    <a class="nav-item" href="#sobrecarga">Sobrecarga</a>
+    <a class="nav-item" href="#depois">Depois</a>
+  </div>
+</nav>
+
+<!-- ══ INTRO ══ -->
+<section id="intro" class="page">
+  <span class="sec-label">Antes de começar</span>
+  <h1 class="sec-title">Sua mente tem um<br>modo de operação<br><em>contra você.</em></h1>
+  <div class="sec-divider"></div>
+
+  <p>Este não é mais um material que vai te dizer "respira fundo" e "pensa positivo".</p>
+  <p>O que você tem nas mãos é um protocolo prático para identificar <strong>como a sua própria mente opera contra os seus interesses</strong> — e desativar esse padrão de dentro pra fora.</p>
+  <p>Criado para quem já tentou de tudo e ainda não encontrou um caminho que funcione de verdade.</p>
+
+  <div class="aviso">
+    <p><strong>Aviso importante:</strong> Este material é educacional e não substitui acompanhamento profissional de saúde mental. Se você está em crise severa, procure um psicólogo ou psiquiatra.</p>
+  </div>
+
+  <h2>Como usar este guia</h2>
+  <p><strong>Parte 1 — Entenda sua mente inimiga:</strong> o que é, como opera e os 4 modos de operação.</p>
+  <p><strong>Parte 2 — O Protocolo de 7 Dias:</strong> específico para o seu modo de operação.</p>
+
+  <div class="info-box">
+    <div class="ib-label">→ Como navegar</div>
+    <p>Use o menu acima para pular direto para o seu perfil. Leia a Parte 1 primeiro — depois vá para a seção do seu modo. <strong>Você não precisa ser perfeito. Você precisa começar.</strong></p>
+  </div>
+
+  <div class="metodo-card">
+    <div class="tec-label">Visão geral do método</div>
+    <div class="metodo-titulo">Método <em>Mente Inimiga</em></div>
+    <div class="metodo-sub">Identifique como sua mente opera contra você — e vire o jogo.</div>
+    <div class="etapas">
+      <div class="etapa">
+        <div class="etapa-num">1</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">Reconhecer o modo</div>
+          <div class="etapa-desc">Sua mente inimiga tem um modo de operação específico. Descobrir qual é o seu é o que torna tudo diferente — porque a solução é diferente para cada modo.</div>
+        </div>
+      </div>
+      <div class="etapa">
+        <div class="etapa-num">2</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">Estabilizar o sistema nervoso</div>
+          <div class="etapa-desc">Você não consegue pensar com clareza no meio da batalha. Antes de qualquer técnica mental, o corpo precisa sair do modo de sobrevivência.</div>
+        </div>
+      </div>
+      <div class="etapa">
+        <div class="etapa-num">3</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">Desativar no ponto certo</div>
+          <div class="etapa-desc">Cada modo tem um ponto de entrada onde se alimenta. A intervenção acontece ali — não nos sintomas, não nas consequências.</div>
+        </div>
+      </div>
+      <div class="etapa">
+        <div class="etapa-num">4</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">Instalar o novo padrão</div>
+          <div class="etapa-desc">7 dias de prática de 5 a 15 minutos para que a calma substitua o caos como resposta automática. A mente inimiga não desaparece — ela perde o controle.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ ENTENDA ══ -->
+<section id="entenda" class="page">
+  <span class="sec-label">Parte 1</span>
+  <h1 class="sec-title">Entenda sua<br><em>mente inimiga</em></h1>
+  <div class="sec-divider"></div>
+
+  <h2>O que é a mente inimiga — de verdade</h2>
+  <p>Ansiedade não é fraqueza. Não é drama. Não é frescura.</p>
+  <p>É uma resposta do sistema nervoso criada para proteger você. Quando nossos ancestrais encontravam um predador, o corpo precisava reagir rápido: coração acelerado, músculos tensos, mente em alerta. Isso salvava vidas.</p>
+  <p>O problema é que esse mesmo sistema <strong>não sabe distinguir um predador de verdade de uma reunião importante</strong>, uma mensagem sem resposta ou uma decisão que você precisa tomar.</p>
+  <p>Para o seu sistema nervoso, qualquer ameaça ao equilíbrio social, profissional ou emocional parece tão perigosa quanto um leão. E aí a sua mente — que deveria ser sua aliada — começa a operar contra você.</p>
+
+  <div class="aviso">
+    <p><strong>A raiz do problema:</strong> ansiedade crônica não é sobre os eventos. É sobre como o sistema nervoso <em>aprendeu</em> a responder a eles. E o que foi aprendido pode ser reaprendido.</p>
+  </div>
+
+  <h2>Por que "só relaxar" não funciona</h2>
+  <p>A maioria dos conselhos trata o sintoma visível e ignora o padrão que o gerou. Respirar fundo ajuda por 3 minutos. Depois, a mente inimiga volta exatamente de onde parou.</p>
+  <p>É como tomar analgésico para uma fratura. Alivia. Mas o osso continua quebrado.</p>
+  <p>O Método Mente Inimiga trabalha em três camadas simultâneas:</p>
+
+  <div class="card accent">
+    <div class="etapas">
+      <div class="etapa">
+        <div class="etapa-num" style="background:rgba(104,198,138,0.1);border-color:rgba(104,198,138,0.3);color:var(--success);">1</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">O corpo</div>
+          <div class="etapa-desc">Regulação do sistema nervoso autônomo. A resposta física precisa ser interrompida antes que qualquer técnica mental funcione.</div>
+        </div>
+      </div>
+      <div class="etapa">
+        <div class="etapa-num" style="background:rgba(104,198,138,0.1);border-color:rgba(104,198,138,0.3);color:var(--success);">2</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">O padrão</div>
+          <div class="etapa-desc">O gatilho real é identificado e desativado na origem — não apenas gerenciado. Específico para o seu modo de operação.</div>
+        </div>
+      </div>
+      <div class="etapa">
+        <div class="etapa-num" style="background:rgba(104,198,138,0.1);border-color:rgba(104,198,138,0.3);color:var(--success);">3</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo">O hábito</div>
+          <div class="etapa-desc">Um novo padrão neurológico instalado por repetição. 7 dias é o tempo mínimo para criar um ponto de ancoragem real.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ PERFIS ══ -->
+<section id="perfis" class="page">
+  <span class="sec-label">Etapa 1 — Reconhecer</span>
+  <h1 class="sec-title">Os 4 modos de<br>operação da<br><em>mente inimiga</em></h1>
+  <div class="sec-divider"></div>
+
+  <p>A maioria das pessoas tem um modo dominante. Conhecer o seu é a primeira etapa — porque a solução é diferente para cada um. Tratar tudo igual é o erro que faz tudo falhar.</p>
+  <p>Se você fez o quiz, já sabe qual é o seu. Caso contrário, leia os 4 e identifique onde você mais se reconhece.</p>
+
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <div class="perfil-modo">
+        <span class="pm-tag">Modo</span>
+        <span class="pm-letra">A</span>
+      </div>
+      <div class="perfil-info">
+        <div class="perfil-nome">Antecipação</div>
+        <div class="perfil-sub">Sua mente vive no futuro e cobra o preço no presente.</div>
+      </div>
+    </div>
+    <div class="perfil-signs">
+      <div class="sign">Dificuldade para dormir — a cabeça simula cenários mesmo com o corpo exausto</div>
+      <div class="sign">Excesso de análise antes de decisões, mesmo as pequenas</div>
+      <div class="sign">Sintomas físicos sem causa aparente (tensão, aperto no peito)</div>
+      <div class="sign">Parece calmo por fora — está em alerta constante por dentro</div>
+    </div>
+  </div>
+
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <div class="perfil-modo">
+        <span class="pm-tag">Modo</span>
+        <span class="pm-letra">L</span>
+      </div>
+      <div class="perfil-info">
+        <div class="perfil-nome">Loop</div>
+        <div class="perfil-sub">Sua mente funciona em loop — e você sabe que não adianta, mas não consegue parar.</div>
+      </div>
+    </div>
+    <div class="perfil-signs">
+      <div class="sign">Os mesmos pensamentos voltam — mesmo quando você já "resolveu" mentalmente</div>
+      <div class="sign">Inquietação sem estímulo: o celular vira válvula de escape automática</div>
+      <div class="sign">Cansaço mental intenso no fim do dia sem esforço físico</div>
+      <div class="sign">Procrastinação e dificuldade de foco em uma coisa só</div>
+    </div>
+  </div>
+
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <div class="perfil-modo">
+        <span class="pm-tag">Modo</span>
+        <span class="pm-letra">J</span>
+      </div>
+      <div class="perfil-info">
+        <div class="perfil-nome">Julgamento</div>
+        <div class="perfil-sub">O olhar dos outros é o seu maior gatilho.</div>
+      </div>
+    </div>
+    <div class="perfil-signs">
+      <div class="sign">Medo de falar em público, dar opinião ou ser o centro das atenções</div>
+      <div class="sign">Analisa cada detalhe do que disse depois de qualquer interação</div>
+      <div class="sign">Evita situações com risco de julgamento antes mesmo de tentar</div>
+      <div class="sign">Sintomas físicos fortes em momentos de exposição ou pressão</div>
+    </div>
+  </div>
+
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <div class="perfil-modo">
+        <span class="pm-tag">Modo</span>
+        <span class="pm-letra">S</span>
+      </div>
+      <div class="perfil-info">
+        <div class="perfil-nome">Sobrecarga</div>
+        <div class="perfil-sub">Não é frescura. É o peso de existir sem direção clara.</div>
+      </div>
+    </div>
+    <div class="perfil-signs">
+      <div class="sign">Sensação de vazio mesmo com a vida objetivamente estável</div>
+      <div class="sign">Esgotamento fácil — qualquer novidade soa como ameaça</div>
+      <div class="sign">Dificuldade de se sentir presente e conectado com o momento</div>
+      <div class="sign">A ansiedade aparece mais quando você está quieto e sem estímulo</div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="ib-label">→ Próximo passo</div>
+    <p>Identificou seu modo? Vá direto para a seção correspondente abaixo. Você não precisa ler todas — o seu protocolo está na seção do <strong>seu</strong> modo de operação.</p>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ PROTOCOLO A: ANTECIPAÇÃO ══ -->
+<section id="antecipacao" class="page">
+  <span class="sec-label">Parte 2 · Modo Antecipação</span>
+
+  <div class="proto-header">
+    <div class="proto-tag">Protocolo de Desativação do Modo Antecipação</div>
+    <div class="proto-nome">Mente Inimiga<br><em>em Modo Antecipação</em></div>
+    <div class="proto-sub">Para quem vive no futuro e não consegue desligar o modo alerta — mesmo quando está tudo bem.</div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Interrupção imediata</div>
+    <div class="tec-titulo">A Técnica das 3 Perguntas</div>
+    <div class="tec-intro">Use sempre que perceber que está entrando em espiral. Leva menos de 3 minutos. Pode ser feita onde você estiver.</div>
+    <div class="tec-steps">
+      <div class="ts">
+        <div class="ts-num">1</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Isso é real ou imaginado agora?</div>
+          <div class="ts-desc">A maioria das antecipações nunca acontece. Pergunte: esse problema existe agora, neste momento? Se não — você está sofrendo por uma ficção.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">2</div>
+        <div class="ts-body">
+          <div class="ts-titulo">O que eu posso controlar?</div>
+          <div class="ts-desc">Liste apenas o que está dentro do seu controle direto. Tudo fora: libere conscientemente — não como derrota, mas como higiene mental.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">3</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Qual a ação mínima agora?</div>
+          <div class="ts-desc">Se há algo a ser feito, qual é o menor passo possível? Aja ou agende. Pensamento sem ação alimenta a mente inimiga — ação mínima a interrompe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Protocolo noturno — 8 minutos</div>
+    <div class="tec-titulo">Desligar o modo rascunho antes de dormir</div>
+    <div class="tec-intro">Use todos os dias da semana antes de dormir. É o coração do protocolo para o Modo Antecipação.</div>
+    <div class="noturno-grid">
+      <div class="ng-item">
+        <div class="ng-time">MIN 1–2</div>
+        <div class="ng-titulo">Escaneamento corporal</div>
+        <div class="ng-desc">Deite. Feche os olhos. Percorra do pé à cabeça. Onde há tensão? Só perceba — não tente resolver.</div>
+      </div>
+      <div class="ng-item">
+        <div class="ng-time">MIN 3–4</div>
+        <div class="ng-titulo">Lista de esvaziamento</div>
+        <div class="ng-desc">Escreva tudo que está na cabeça. Não analise. Só registre. O papel guarda — a mente pode soltar.</div>
+      </div>
+      <div class="ng-item">
+        <div class="ng-time">MIN 5–6</div>
+        <div class="ng-titulo">Respiração 4-7-8</div>
+        <div class="ng-desc">Inspire em 4s, segure 7s, expire em 8s. Repita 4 ciclos. Ativa o sistema nervoso parassimpático.</div>
+      </div>
+      <div class="ng-item">
+        <div class="ng-time">MIN 7–8</div>
+        <div class="ng-titulo">Âncora de amanhã</div>
+        <div class="ng-desc">Escolha UMA coisa concreta que vai fazer amanhã. Fecha o loop de antecipação — a mente para de guardar o futuro.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="plano">
+    <div class="plano-titulo">Plano de 7 Dias — Modo Antecipação</div>
+    <div class="dias">
+      <div class="dia"><div class="dia-num">D1</div><div><div class="dia-titulo">Mapeie seus gatilhos</div><div class="dia-desc">Anote 3 situações da última semana que geraram ansiedade. Para cada uma: era ameaça real ou antecipada?</div></div></div>
+      <div class="dia"><div class="dia-num">D2</div><div><div class="dia-titulo">Inicie o Protocolo Noturno</div><div class="dia-desc">8 minutos antes de dormir. Sem exceção. Este é o hábito mais importante do protocolo.</div></div></div>
+      <div class="dia"><div class="dia-num">D3</div><div><div class="dia-titulo">Técnica das 3 Perguntas</div><div class="dia-desc">Use pelo menos 2 vezes ao longo do dia — mesmo sem estar em crise. Treino preventivo.</div></div></div>
+      <div class="dia"><div class="dia-num">D4</div><div><div class="dia-titulo">Mapa de controle</div><div class="dia-desc">Divida sua maior preocupação: o que posso controlar / o que não posso. Foque apenas na primeira coluna.</div></div></div>
+      <div class="dia"><div class="dia-num">D5</div><div><div class="dia-titulo">Corpo em movimento</div><div class="dia-desc">30 minutos de caminhada ou atividade física. Desativa o loop mental mais rápido que qualquer técnica cognitiva.</div></div></div>
+      <div class="dia"><div class="dia-num">D6</div><div><div class="dia-titulo">Protocolo noturno + gratidão</div><div class="dia-desc">Acrescente: escreva 3 coisas que foram boas hoje. Reorienta o filtro de atenção do risco para o real.</div></div></div>
+      <div class="dia"><div class="dia-num">D7</div><div><div class="dia-titulo">Revisão e âncora futura</div><div class="dia-desc">O que melhorou? Qual técnica funcionou mais? Defina 2 práticas que continuam na sua rotina.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ PROTOCOLO L: LOOP ══ -->
+<section id="loop" class="page">
+  <span class="sec-label">Parte 2 · Modo Loop</span>
+
+  <div class="proto-header">
+    <div class="proto-tag">Protocolo de Interrupção do Modo Loop</div>
+    <div class="proto-nome">Mente Inimiga<br><em>em Modo Loop</em></div>
+    <div class="proto-sub">Para quem não consegue parar de pensar no mesmo problema — mesmo sabendo que não adianta.</div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Interrupção do loop</div>
+    <div class="tec-titulo">Método de Interrupção em 4 Passos</div>
+    <div class="tec-intro">Use assim que perceber que o mesmo pensamento voltou. Não tente forçar para fora — use a mecânica do loop contra ele.</div>
+    <div class="tec-steps">
+      <div class="ts">
+        <div class="ts-num">1</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Nomeie o loop</div>
+          <div class="ts-desc">Diga: "Estou ruminando sobre [X]." Nomear cria distância cognitiva — você observa em vez de ser o pensamento.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">2</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Interrupção física</div>
+          <div class="ts-desc">Levante. Mude de cômodo. Beba água. Qualquer ação física deliberada quebra o padrão neurológico do loop.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">3</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Esvazie no papel</div>
+          <div class="ts-desc">Escreva o pensamento completo. Quando está no papel, a mente para de guardar e o loop perde a força.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">4</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Tarefa de foco único</div>
+          <div class="ts-desc">Escolha uma atividade simples que exige atenção física. 10 minutos é suficiente para resetar o padrão.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Hábito diário — 5 minutos</div>
+    <div class="tec-titulo">Exercício de Descarga Mental</div>
+    <div class="aviso" style="margin-top:12px;">
+      <p>Todo dia pela manhã, <strong>antes de abrir o celular</strong>: escreva sem parar por 5 minutos tudo que está na cabeça. Não filtre. Não corrija. Não releia. Quando acabar, feche e não olhe mais. O objetivo não é resolver — é liberar o que a mente estava guardando.</p>
+    </div>
+  </div>
+
+  <div class="plano">
+    <div class="plano-titulo">Plano de 7 Dias — Modo Loop</div>
+    <div class="dias">
+      <div class="dia"><div class="dia-num">D1</div><div><div class="dia-titulo">Identifique seu loop principal</div><div class="dia-desc">Qual é o pensamento que mais volta? Escreva. Apenas nomear já reduz a carga emocional.</div></div></div>
+      <div class="dia"><div class="dia-num">D2</div><div><div class="dia-titulo">Inicie a descarga matinal</div><div class="dia-desc">5 minutos de escrita livre toda manhã. Faça antes de abrir o celular. O hábito mais importante do protocolo.</div></div></div>
+      <div class="dia"><div class="dia-num">D3</div><div><div class="dia-titulo">Método de interrupção em ação</div><div class="dia-desc">Aplique os 4 passos na primeira vez que o loop aparecer. Registre como foi.</div></div></div>
+      <div class="dia"><div class="dia-num">D4</div><div><div class="dia-titulo">Corpo fora da cabeça</div><div class="dia-desc">20 minutos de atividade física ou trabalho manual. O corpo é a saída mais rápida do loop mental.</div></div></div>
+      <div class="dia"><div class="dia-num">D5</div><div><div class="dia-titulo">Descarga + ação pequena</div><div class="dia-desc">Após a descarga matinal, escolha uma tarefa pequena e leve ao fim. Conclusão interrompe o ciclo de procrastinação.</div></div></div>
+      <div class="dia"><div class="dia-num">D6</div><div><div class="dia-titulo">Limite o tempo de problema</div><div class="dia-desc">Defina 15 minutos específicos do dia para pensar no que rumina. Fora desse horário, adie conscientemente.</div></div></div>
+      <div class="dia"><div class="dia-num">D7</div><div><div class="dia-titulo">Revisão + hábito permanente</div><div class="dia-desc">O loop ficou mais fraco? Integre 2 práticas à rotina diária permanentemente.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ PROTOCOLO J: JULGAMENTO ══ -->
+<section id="julgamento" class="page">
+  <span class="sec-label">Parte 2 · Modo Julgamento</span>
+
+  <div class="proto-header">
+    <div class="proto-tag">Protocolo de Reprogramação do Modo Julgamento</div>
+    <div class="proto-nome">Mente Inimiga<br><em>em Modo Julgamento</em></div>
+    <div class="proto-sub">Para quem trava diante do olhar e do julgamento dos outros — antes, durante e depois das situações.</div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Reprogramação da narrativa interna</div>
+    <div class="tec-titulo">Desativando a Voz que Julga</div>
+    <div class="tec-intro">A voz que julga antes dos outros terem chance não é a verdade — é um padrão aprendido. Esse exercício reescreve esse padrão.</div>
+    <div class="tec-steps">
+      <div class="ts">
+        <div class="ts-num">1</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Identifique a narrativa</div>
+          <div class="ts-desc">Qual é a frase automática que aparece em situações de pressão? Escreva exatamente como ela soa — sem filtro.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">2</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Teste a evidência</div>
+          <div class="ts-desc">Essa narrativa é factualmente verdadeira? O que aconteceu de concreto para confirmar — ou refutar — ela? A maioria não sobrevive a esse teste.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">3</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Crie a narrativa alternativa realista</div>
+          <div class="ts-desc">Não "sou incrível". Mas: "Já passei por situações difíceis e saí delas." Realismo funciona mais que otimismo forçado.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">4</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Repita antes das situações</div>
+          <div class="ts-desc">Antes de qualquer situação de pressão, repita a narrativa alternativa 3 vezes. Priming funciona — o cérebro acredita no que ouve com frequência.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Ancoragem antes da exposição — 3 minutos</div>
+    <div class="tec-titulo">Protocolo de Regulação Corporal</div>
+    <div class="aviso" style="margin-top:12px;">
+      <p>Use antes de reuniões, apresentações ou conversas difíceis. <strong>O protocolo:</strong> expire completamente. Inspire pelo nariz em 4s. Expire pela boca em 6s. Repita 5 vezes. Ativa o nervo vago e desativa a resposta de fuga em menos de 3 minutos.</p>
+    </div>
+  </div>
+
+  <div class="plano">
+    <div class="plano-titulo">Plano de 7 Dias — Modo Julgamento</div>
+    <div class="dias">
+      <div class="dia"><div class="dia-num">D1</div><div><div class="dia-titulo">Mapeie suas situações-gatilho</div><div class="dia-desc">Liste 5 situações que geram ansiedade social. Ordene do menos ao mais desafiador.</div></div></div>
+      <div class="dia"><div class="dia-num">D2</div><div><div class="dia-titulo">Identifique sua narrativa</div><div class="dia-desc">Qual é a frase automática de julgamento? Faça o exercício completo de teste de evidência.</div></div></div>
+      <div class="dia"><div class="dia-num">D3</div><div><div class="dia-titulo">Técnica de regulação</div><div class="dia-desc">Pratique os 5 ciclos respiratórios pela manhã — para construir familiaridade antes de precisar.</div></div></div>
+      <div class="dia"><div class="dia-num">D4</div><div><div class="dia-titulo">Primeira exposição planejada</div><div class="dia-desc">Escolha a situação de menor desafio da lista. Execute. Use a respiração antes. Registre o que surpreendeu positivamente.</div></div></div>
+      <div class="dia"><div class="dia-num">D5</div><div><div class="dia-titulo">Análise pós-situação diferente</div><div class="dia-desc">Após qualquer interação, faça só 1 pergunta: o que de bom aconteceu? Troca o foco de auditoria para evidência positiva.</div></div></div>
+      <div class="dia"><div class="dia-num">D6</div><div><div class="dia-titulo">Segunda exposição planejada</div><div class="dia-desc">Avance para o próximo item da lista. Aplique o protocolo completo: narrativa + respiração antes, análise depois.</div></div></div>
+      <div class="dia"><div class="dia-num">D7</div><div><div class="dia-titulo">Revisão da jornada</div><div class="dia-desc">Compare como você se sentiu no Dia 1 e no Dia 7 nas mesmas situações. O que mudou?</div></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ PROTOCOLO S: SOBRECARGA ══ -->
+<section id="sobrecarga" class="page">
+  <span class="sec-label">Parte 2 · Modo Sobrecarga</span>
+
+  <div class="proto-header">
+    <div class="proto-tag">Protocolo de Aterramento do Modo Sobrecarga</div>
+    <div class="proto-nome">Mente Inimiga<br><em>em Modo Sobrecarga</em></div>
+    <div class="proto-sub">Para quem carrega mais do que deveria — e se sente perdido sem conseguir explicar exatamente por quê.</div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Liberação da carga</div>
+    <div class="tec-titulo">Exercício de Mapeamento de Carga</div>
+    <div class="tec-intro">Antes de resolver qualquer coisa, você precisa ver o que está carregando. Esse exercício revela o peso invisível.</div>
+    <div class="tec-steps">
+      <div class="ts">
+        <div class="ts-num">1</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Liste seus compromissos emocionais</div>
+          <div class="ts-desc">Quais relacionamentos, situações ou expectativas estão ocupando energia? Inclua tudo — inclusive o que parece pequeno.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">2</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Classifique cada um</div>
+          <div class="ts-desc">Para cada item: é meu de verdade ou assumi pelo outro? Posso resolver agora? É real ou imaginado?</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">3</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Identifique o peso desnecessário</div>
+          <div class="ts-desc">Circule o que não é genuinamente seu para carregar — ou o que não tem resolução possível agora.</div>
+        </div>
+      </div>
+      <div class="ts">
+        <div class="ts-num">4</div>
+        <div class="ts-body">
+          <div class="ts-titulo">Declare a liberação</div>
+          <div class="ts-desc">Para cada peso circulado, diga em voz alta: "Eu libero [X] porque não é meu / porque não posso resolver agora." Dizer em voz alta tem efeito diferente de só pensar.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tecnica">
+    <div class="tec-label">Aterramento no presente</div>
+    <div class="tec-titulo">Técnica 5-4-3-2-1</div>
+    <div class="aviso" style="margin-top:12px;">
+      <p>A mente inimiga em modo sobrecarga não opera no presente — ela vive no passado ou no futuro. Identifique: <strong>5 coisas que você pode VER</strong> agora. <strong>4 que pode TOCAR.</strong> <strong>3 que pode OUVIR.</strong> <strong>2 que pode CHEIRAR.</strong> <strong>1 que pode PROVAR.</strong> Percorra devagar. O sistema nervoso se ancora onde os sentidos estão.</p>
+    </div>
+  </div>
+
+  <div class="plano">
+    <div class="plano-titulo">Plano de 7 Dias — Modo Sobrecarga</div>
+    <div class="dias">
+      <div class="dia"><div class="dia-num">D1</div><div><div class="dia-titulo">Mapeamento de carga completo</div><div class="dia-desc">Faça o exercício completo. Escreva. Leva cerca de 20 minutos. É o mais importante dos 7 dias.</div></div></div>
+      <div class="dia"><div class="dia-num">D2</div><div><div class="dia-titulo">Técnica 5-4-3-2-1</div><div class="dia-desc">Pratique duas vezes hoje: manhã e noite. O objetivo é construir familiaridade com o estado de presença.</div></div></div>
+      <div class="dia"><div class="dia-num">D3</div><div><div class="dia-titulo">Uma micro-reconexão</div><div class="dia-desc">Escolha uma atividade que te dá prazer genuíno. 30 minutos só para isso — sem culpa, sem produtividade.</div></div></div>
+      <div class="dia"><div class="dia-num">D4</div><div><div class="dia-titulo">Descarga emocional guiada</div><div class="dia-desc">Escreva por 15 minutos tudo que está pesando. Ao final, sublinhe o que é realmente seu vs. o que é do outro.</div></div></div>
+      <div class="dia"><div class="dia-num">D5</div><div><div class="dia-titulo">Limite o input</div><div class="dia-desc">Reduza notícias e redes sociais para menos de 30 minutos no total. Observe o efeito no nível de sobrecarga.</div></div></div>
+      <div class="dia"><div class="dia-num">D6</div><div><div class="dia-titulo">Conexão presente</div><div class="dia-desc">Tenha uma conversa real com alguém que te faz bem — sem agenda, sem produtividade, só conexão.</div></div></div>
+      <div class="dia"><div class="dia-num">D7</div><div><div class="dia-titulo">Revisão e âncora de sentido</div><div class="dia-desc">O que ficou mais leve? Escreva 3 coisas pequenas que dão sentido à sua vida agora — não no futuro. Agora.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<!-- ══ FECHAMENTO ══ -->
+<section id="depois" class="fechamento">
+  <div class="fecha-icon">✦</div>
+
+  <h2 class="fecha-title">Você já fez<br>o mais difícil:<br><em>começou.</em></h2>
+
+  <div class="fecha-body">
+    Se você chegou até aqui e fez o protocolo, algo mudou — mesmo que você não perceba ainda com clareza.<br><br>
+    A mente inimiga não desaparece em uma semana. Mas em 7 dias você pode mudar a <strong>relação que tem com ela.</strong> Pode começar a enxergar os padrões. Pode sentir que existe um caminho.
+  </div>
+
+  <div class="fecha-divider"></div>
+
+  <div class="fecha-body">
+    Continue as 2 práticas que mais funcionaram.<br>
+    30 dias de consistência é o que transforma<br>
+    uma técnica em um <strong>novo padrão neurológico.</strong><br><br>
+    Você não precisa de uma vida sem ansiedade para ser feliz.<br>
+    Você precisa de uma vida onde a <strong>sua mente trabalha por você — não contra você.</strong>
+  </div>
+
+  <div class="fecha-divider"></div>
+
+  <div class="fecha-quote">
+    "Você não estava fraco.<br>Você estava sem mapa.<br>Agora tem um."
+  </div>
+
+  <div class="fecha-marca">✦ Método Mente Inimiga ✦</div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  Método Mente Inimiga · Material digital · Uso pessoal · Não distribua<br>
+  © 2025 · Todos os direitos reservados
+</footer>
+
+<!-- BOTÃO VOLTAR AO TOPO -->
+<a href="#top" class="back-to-top" id="backTop" aria-label="Voltar ao topo">↑</a>
+
+<script>
+// Botão voltar ao topo
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+
+// Nav ativo por seção
+const sections = document.querySelectorAll('section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.toggle('active', item.getAttribute('href') === `#${id}`);
+      });
+      // Scroll nav para item ativo
+      const activeItem = document.querySelector(`.nav-item[href="#${id}"]`);
+      if (activeItem) {
+        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  });
+}, { threshold: 0.3 });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

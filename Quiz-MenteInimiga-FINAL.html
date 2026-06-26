@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qual tipo de ansiedade está travando sua vida?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D0F14;
+    --bg-card: #13161E;
+    --bg-card-hover: #191D28;
+    --text: #F2F0EB;
+    --text-muted: #8A8FA8;
+    --accent: #7B68EE;
+    --accent-glow: rgba(123, 104, 238, 0.18);
+    --cta: #E8A87C;
+    --cta-hover: #F0B98A;
+    --danger: #E07070;
+    --success: #68C68A;
+    --border: rgba(255,255,255,0.07);
+    --border-accent: rgba(123, 104, 238, 0.35);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 48px 0 40px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-glow);
+    border: 1px solid var(--border-accent);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #A89EF5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .badge::before {
+    content: '●';
+    font-size: 8px;
+    color: var(--accent);
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header .sub {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  .header .sub strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .social-proof {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .proof-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .proof-item span.num {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    margin: 32px 0 28px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .progress-info .step-label {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .progress-bar-track {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #A89EF5);
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(123, 104, 238, 0.5);
+  }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz-section { display: block; }
+  #result-section { display: none; }
+
+  .question-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 32px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  .option:hover {
+    background: var(--accent-glow);
+    border-color: var(--border-accent);
+    transform: translateX(3px);
+  }
+
+  .option:active { transform: translateX(1px) scale(0.99); }
+
+  .option .opt-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+  }
+
+  .option .opt-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  /* ── LOADING ── */
+  #loading-section {
+    display: none;
+    text-align: center;
+    padding: 80px 20px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .loader-ring {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 32px;
+    border-radius: 50%;
+    border: 3px solid rgba(123, 104, 238, 0.15);
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .loading-step {
+    font-size: 13px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    min-height: 20px;
+  }
+
+  /* ── RESULT ── */
+  #result-section {
+    animation: revealResult 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+
+  @keyframes revealResult {
+    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .result-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--success);
+    margin-bottom: 20px;
+  }
+
+  .result-eyebrow::before,
+  .result-eyebrow::after {
+    content: '';
+    height: 1px;
+    width: 40px;
+    background: var(--success);
+    opacity: 0.4;
+  }
+
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .result-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .result-subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  /* CORE DESCRIPTION */
+  .result-core {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .result-core .core-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .result-core .core-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .result-core .core-text strong {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* AMPLIFICATION */
+  .amplification {
+    background: rgba(224, 112, 112, 0.06);
+    border: 1px solid rgba(224, 112, 112, 0.2);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  .amplification .amp-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--danger);
+    margin-bottom: 14px;
+  }
+
+  .amplification .amp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .amplification .amp-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .amplification .amp-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .amplification .amp-list li::before {
+    content: '→';
+    color: var(--danger);
+    opacity: 0.7;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* SIGNS */
+  .signs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .sign-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    background: rgba(123, 104, 238, 0.06);
+    border: 1px solid rgba(123, 104, 238, 0.15);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .sign-item::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* MECHANISM */
+  .mechanism {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .mechanism .mech-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), #A89EF5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .mechanism .mech-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .mechanism .mech-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* TIMER */
+  .timer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background: rgba(232, 168, 124, 0.08);
+    border: 1px solid rgba(232, 168, 124, 0.2);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--cta);
+    font-weight: 600;
+  }
+
+  .timer-bar .timer-count {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    min-width: 52px;
+    text-align: center;
+  }
+
+  /* OFFER CARD */
+  .offer-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--cta);
+    border-radius: 20px;
+    padding: 36px 32px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .offer-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(232, 168, 124, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .offer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(232, 168, 124, 0.1);
+    border: 1px solid rgba(232, 168, 124, 0.25);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cta);
+    margin-bottom: 20px;
+  }
+
+  .offer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3.5vw, 26px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+
+  .offer-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .offer-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .offer-bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .offer-bullets li .bullet-icon {
+    width: 22px;
+    height: 22px;
+    background: rgba(104, 198, 138, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 11px;
+    color: var(--success);
+  }
+
+  .offer-bullets li strong {
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* TESTIMONIAL */
+  .testimonial {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 28px;
+  }
+
+  .testimonial .stars {
+    color: #F5C842;
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+
+  .testimonial .test-text {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .testimonial .test-author {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .testimonial .test-author span {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  /* PRICE */
+  .price-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .price-original {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  .price-current {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .price-current .price-small {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    vertical-align: super;
+  }
+
+  .discount-tag {
+    background: rgba(104, 198, 138, 0.12);
+    border: 1px solid rgba(104, 198, 138, 0.25);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--success);
+    margin-left: auto;
+  }
+
+  /* CTA */
+  .cta-btn {
+    display: block;
+    width: 100%;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, var(--cta), #F0B98A);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A1208;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 24px rgba(232, 168, 124, 0.3);
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(232, 168, 124, 0.45);
+  }
+
+  .cta-btn:active { transform: translateY(0); }
+
+  .cta-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .cta-sub svg { opacity: 0.5; }
+
+  /* ── MOBILE FIRST ── */
+  @media (max-width: 600px) {
+    .wrapper { padding: 0 14px 60px; }
+
+    /* Header */
+    .header { padding: 32px 0 28px; }
+    .header h1 { font-size: clamp(22px, 7vw, 32px); }
+    .header .sub { font-size: 14px; }
+    .social-proof { gap: 10px; font-size: 12px; }
+
+    /* Quiz card */
+    .question-card { padding: 20px 16px; border-radius: 16px; }
+    .question-text { font-size: clamp(15px, 4.5vw, 18px); margin-bottom: 20px; }
+    .option { padding: 13px 14px; gap: 10px; }
+    .opt-icon { font-size: 18px; width: 28px; }
+    .opt-text { font-size: 13px; }
+
+    /* Resultado */
+    .result-title { font-size: clamp(22px, 7vw, 32px); }
+    .result-core, .amplification { padding: 18px 16px; }
+    .signs-grid { grid-template-columns: 1fr; gap: 8px; }
+    .sign-item { font-size: 13px; }
+    .mechanism .mech-name { font-size: clamp(17px, 5vw, 22px); }
+
+    /* Timer */
+    .timer-bar {
+      flex-wrap: wrap;
+      font-size: 12px;
+      gap: 6px;
+      justify-content: center;
+      padding: 12px 14px;
+    }
+    .timer-bar .timer-count { font-size: 20px; min-width: 48px; }
+
+    /* Oferta */
+    .offer-card { padding: 20px 16px; border-radius: 16px; }
+    .offer-title { font-size: 17px; }
+    .offer-bullets li { font-size: 13px; }
+    .price-current { font-size: 28px; }
+    .price-original { font-size: 13px; }
+    .discount-tag { font-size: 11px; padding: 4px 8px; }
+    .cta-btn { font-size: 14px; padding: 16px 14px; border-radius: 12px; }
+
+    /* Testimonial */
+    .testimonial { padding: 16px; }
+    .test-text { font-size: 13px; }
+  }
+
+  @media (max-width: 380px) {
+    .wrapper { padding: 0 12px 60px; }
+    .header h1 { font-size: 20px; }
+    .question-text { font-size: 14px; }
+    .opt-text { font-size: 12px; }
+    .offer-title { font-size: 15px; }
+    .price-current { font-size: 24px; }
+    .cta-btn { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="badge">✦ Diagnóstico Gratuito · 2 minutos</div>
+    <h1>Qual é o modo de operação<br>da sua <em>mente inimiga?</em></h1>
+    <p class="sub">Responda 7 perguntas e descubra <strong>como a sua própria mente está operando contra você</strong> — e qual é o protocolo específico para virar esse jogo.</p>
+    <div class="social-proof">
+      <div class="proof-item">
+        <span class="num">47.200+</span> diagnósticos feitos
+      </div>
+      <div class="proof-item">·</div>
+      <div class="proof-item">
+        <span class="num">4</span> perfis com soluções distintas
+      </div>
+      <div class="proof-item">·</div>
+      <div class="proof-item">
+        <span class="num">100%</span> gratuito
+      </div>
+    </div>
+  </header>
+
+  <!-- QUIZ SECTION -->
+  <section id="quiz-section">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span class="step-label" id="step-label">Pergunta 1 de 7</span>
+        <span id="step-pct">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-bar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <!-- JS renderiza aqui -->
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <section id="loading-section">
+    <div class="loader-ring"></div>
+    <p class="loading-text">Analisando suas respostas...</p>
+    <p class="loading-step" id="loading-step"></p>
+  </section>
+
+  <!-- RESULT SECTION -->
+  <section id="result-section">
+    <!-- JS renderiza aqui -->
+  </section>
+
+</div>
+
+<script>
+const questions = [
+  {
+    text: "Com qual frequência você sente aquela sensação de que algo ruim está prestes a acontecer — mesmo sem nenhum motivo claro?",
+    options: [
+      { icon: "😰", text: "Quase todos os dias. Fico em alerta o tempo todo, como se esperando o pior." },
+      { icon: "😟", text: "Algumas vezes por semana — especialmente quando está silencioso ou à noite." },
+      { icon: "😬", text: "Só quando tem pressão real: confronto, prazo ou exposição." },
+      { icon: "😐", text: "Raramente. Quando aparece, passa antes de me afetar muito." }
+    ],
+    weights: { A: [3,1,0,0], R: [1,2,1,0], S: [0,1,3,0], E: [2,2,0,0] }
+  },
+  {
+    text: "O que mais te cobra energia no dia a dia por causa da ansiedade?",
+    options: [
+      { icon: "🌙", text: "Não consigo dormir de verdade — a cabeça não desacelera mesmo quando o corpo pede." },
+      { icon: "🫀", text: "Meu corpo avisa antes da minha mente: coração acelerado, falta de ar, tensão." },
+      { icon: "🔁", text: "Os mesmos pensamentos que ficam voltando. Eu sei que não adianta remoer, mas não consigo parar." },
+      { icon: "🚪", text: "Eu desvio. Evito situações que poderiam gerar desconforto antes mesmo de tentar." }
+    ],
+    weights: { A: [2,1,1,0], R: [2,0,3,0], S: [0,2,1,2], E: [2,1,0,1] }
+  },
+  {
+    text: "Quando você está em grupo ou numa conversa importante, como você se sente por dentro?",
+    options: [
+      { icon: "🙈", text: "Com medo de falar algo errado ou de ser julgado. Fico me monitorando o tempo todo." },
+      { icon: "😶", text: "Aparentemente normal — mas depois fico horas revisando mentalmente o que disse." },
+      { icon: "😣", text: "Presente no corpo, mas a cabeça está em outro lugar, calculando coisas que não têm relação." },
+      { icon: "😊", text: "Bem, na maioria das vezes. Meu problema maior é quando estou sozinho." }
+    ],
+    weights: { A: [0,1,2,0], R: [0,2,1,0], S: [3,3,0,0], E: [0,0,1,3] }
+  },
+  {
+    text: "Como a ansiedade aparece no seu trabalho, estudos ou na sua capacidade de produzir?",
+    options: [
+      { icon: "⏳", text: "Procrastino. Começo várias coisas, fico travado no meio, entrego menos do que poderia." },
+      { icon: "🔥", text: "Sou hiperprodutor por fora — mas destruído por dentro. Ninguém percebe o custo disso." },
+      { icon: "🤯", text: "Trava na hora de apresentar, falar, decidir ou ser avaliado. Meu corpo troca de velocidade." },
+      { icon: "😮‍💨", text: "Me esgoto rápido. Qualquer novidade soa como ameaça e me deixa sobrecarregado." }
+    ],
+    weights: { A: [2,2,0,0], R: [2,1,0,1], S: [0,0,3,0], E: [0,1,0,3] }
+  },
+  {
+    text: "Qual dessas frases mais se parece com o que passa na sua cabeça de verdade?",
+    options: [
+      { icon: "💭", text: "\"E se der errado? E se acontecer algo ruim? Eu preciso estar preparado para o pior.\"" },
+      { icon: "👁", text: "\"Todo mundo está me observando. Eles vão perceber que eu não sei o que estou fazendo.\"" },
+      { icon: "😔", text: "\"Por que eu não consigo parar de pensar nisso? Já passou. Mas continua aqui.\"" },
+      { icon: "🌊", text: "\"Às vezes me sinto perdido. Tenho tudo que precisaria para estar bem — mas não estou.\"" }
+    ],
+    weights: { A: [3,0,1,0], R: [0,0,3,1], S: [0,3,0,0], E: [1,0,0,3] }
+  },
+  {
+    text: "Quando você tenta relaxar ou tirar um tempo para si, o que realmente acontece?",
+    options: [
+      { icon: "📱", text: "Fico no celular sem conseguir parar. Sem estímulo, a inquietação fica insuportável." },
+      { icon: "😓", text: "Consigo descansar, mas me sinto culpado por isso. Como se eu não merecesse parar." },
+      { icon: "😳", text: "Qualquer barulho ou interrupção me irrita de forma desproporcional. Meu sistema fica no limite." },
+      { icon: "🛋", text: "Consigo relaxar por um tempo, mas a ansiedade volta sem avisar e sem motivo." }
+    ],
+    weights: { A: [1,0,2,1], R: [3,0,1,0], S: [0,1,0,1], E: [0,2,1,2] }
+  },
+  {
+    text: "O que você mais quer sentir no dia a dia — e que a ansiedade está te impedindo de ter?",
+    options: [
+      { icon: "☮️", text: "Paz mental. Poder sentar em silêncio sem que a cabeça acelere sozinha." },
+      { icon: "🗣", text: "Confiança. Falar, agir, decidir — sem travar ou passar horas me arrependendo depois." },
+      { icon: "😴", text: "Descanso de verdade. Dormir e acordar sem aquela sensação de que carrego um peso." },
+      { icon: "🌟", text: "Leveza. Viver presente, com a sensação de que minha vida faz sentido." }
+    ],
+    weights: { A: [3,0,1,1], R: [2,0,2,0], S: [0,3,0,1], E: [0,0,1,3] }
+  }
+];
+
+const profiles = {
+  A: {
+    tag: "Perfil identificado",
+    title: 'Ansiedade de <em>Antecipação</em>',
+    subtitle: "Sua mente vive no futuro — e cobra o preço no presente.",
+    core: `Você não tem medo de situações reais. Você tem medo de situações <strong>que provavelmente nunca vão acontecer</strong> — mas que sua mente trata como se fossem certas. Isso cria um estado permanente de alerta silencioso que <strong>consome energia sem deixar rastro visível</strong>. Para fora, você parece calmo. Por dentro, nunca para de calcular.`,
+    ampTitle: "Se isso não mudar, é o que vai continuar acontecendo:",
+    ampItems: [
+      "Você vai continuar dormindo mal, com a cabeça no modo rascunho mesmo quando o dia acabou.",
+      "Vai procrastinar decisões importantes esperando a \"certeza\" que nunca vem — e perdendo janelas.",
+      "Vai se sentir culpado por descansar, porque a sua mente entende descanso como descuido.",
+      "O cansaço vai acumular silenciosamente até o dia em que o corpo cobrar em voz alta."
+    ],
+    signs: [
+      "Você pensa demais antes de agir — mesmo em decisões pequenas",
+      "Dificuldade para dormir: a mente fica simulando cenários",
+      "Você é exigente consigo mesmo de uma forma que ninguém de fora percebe",
+      "Parece calmo por fora, mas carrega um estado de alerta constante por dentro"
+    ],
+    mechTag: "Como o Método Mente Inimiga age no seu perfil",
+    mechName: "Protocolo de Desativação do Modo Alerta",
+    mechDesc: "Uma sequência de 3 etapas que interrompe o ciclo de antecipação antes que ele tome o controle — atuando direto no gatilho do seu perfil, não nos sintomas.",
+    bullets: [
+      { strong: "As 3 perguntas que silenciam qualquer espiral de antecipação em menos de 2 minutos", detail: " — sem meditação nem respiração guiada." },
+      { strong: "Protocolo noturno de 8 minutos para desligar o modo rascunho da mente", detail: " antes de dormir — e acordar sem aquele peso já no primeiro pensamento do dia." },
+      { strong: "Mapa dos gatilhos ocultos", detail: " — identifique exatamente o que ativa o seu modo alerta para parar de ser surpreendido por ele." },
+      { strong: "Plano de 7 dias para reinstalar a calma como estado padrão", detail: " — não como técnica, mas como novo padrão de funcionamento mental." }
+    ],
+    testimonial: {
+      text: "Eu achei que era 'do meu jeito' ser assim. Que eu era ansiosa por natureza. No terceiro dia do plano, dormi sem acordar no meio da noite pela primeira vez em meses. Simples assim.",
+      author: "Fernanda M., 34 anos",
+      tag: "Perfil: Antecipação"
+    },
+    cta: "Quero parar de viver em modo de alerta →"
+  },
+  R: {
+    tag: "Perfil identificado",
+    title: 'Ansiedade <em>Ruminativa</em>',
+    subtitle: "Sua mente funciona em loop — e você sabe que não adianta, mas não consegue parar.",
+    core: `O problema não é que você pensa demais. O problema é que você <strong>não consegue soltar o pensamento</strong> mesmo quando quer. Sua mente funciona como um arquivo que reabre sozinho: uma conversa de semanas atrás, uma decisão que já foi tomada, uma preocupação que você já resolveu mentalmente dez vezes. O esforço de segurar esses loops <strong>consome mais energia do que qualquer esforço físico.</strong>`,
+    ampTitle: "Sem tratar o loop, é isso que vai continuar acontecendo:",
+    ampItems: [
+      "Você vai continuar indo dormir tarde, com a cabeça ainda processando o dia inteiro.",
+      "Vai perder foco no que está na sua frente porque parte da sua atenção está sempre naquele pensamento.",
+      "A ruminação vai parecer raciocínio útil — mas vai ser só desgaste disfarçado de reflexão.",
+      "O cansaço mental vai acumular até você se sentir esgotado sem saber exatamente por quê."
+    ],
+    signs: [
+      "Os mesmos pensamentos voltam — mesmo quando você já 'resolveu' mentalmente",
+      "Você se sente inquieto sem estímulo. O celular vira uma válvula de escape automática.",
+      "Procrastinação e dificuldade de foco em uma coisa só",
+      "Cansaço mental no fim do dia mesmo sem ter feito esforço físico"
+    ],
+    mechTag: "Como o Método Mente Inimiga age no seu perfil",
+    mechName: "Protocolo de Interrupção do Loop Mental",
+    mechDesc: "Uma abordagem de 4 passos que aproveita a mecânica do próprio loop para quebrá-lo — sem esforço de força bruta, porque forçar não funciona com ruminação.",
+    bullets: [
+      { strong: "Método de interrupção de ruminação em 4 passos", detail: " — para quando um pensamento fica voltando e você não consegue soltar, mesmo sabendo que deveria." },
+      { strong: "Exercício de descarga mental de 5 minutos", detail: " que esvazia a cabeça sem exigir concentração — pode ser feito na cama, antes de dormir ou no intervalo do trabalho." },
+      { strong: "Como usar o corpo para sair da cabeça na hora certa", detail: " — a técnica corporal que ruminadores ignoram e que funciona quando as técnicas mentais já falharam." },
+      { strong: "Plano de 7 dias para reinstalar a calma como estado padrão", detail: " — construindo um novo padrão de processamento mental, não só apagando o sintoma." }
+    ],
+    testimonial: {
+      text: "Eu não conseguia assistir uma série sem minha mente ir embora pra alguma preocupação. Parecia frescura. Quando entendi que era um padrão e aprendi a interrompê-lo, foi libertador.",
+      author: "Lucas T., 29 anos",
+      tag: "Perfil: Ruminação"
+    },
+    cta: "Quero sair do loop de uma vez →"
+  },
+  S: {
+    tag: "Perfil identificado",
+    title: 'Ansiedade <em>Social e de Performance</em>',
+    subtitle: "O olhar dos outros é o seu maior gatilho — e isso está limitando quem você pode ser.",
+    core: `Você não tem medo de situações. Você tem medo de <strong>como vai ser avaliado</strong> nelas. Isso é diferente — e mais difícil de perceber. Por fora, pode parecer timidez ou perfeccionismo. Por dentro, é um julgamento constante de si mesmo antes, durante e depois de cada interação. Esse padrão <strong>trava decisões, relacionamentos e a sua capacidade de se expressar com confiança.</strong>`,
+    ampTitle: "Se esse padrão continuar sem ser tratado:",
+    ampItems: [
+      "Você vai continuar se esquivando de oportunidades porque o risco de julgamento parece maior que o ganho.",
+      "Vai gastar energia pós-interação revisando o que disse, como disse, o que poderia ter sido diferente.",
+      "Vai construir uma versão menor de si mesmo para se manter seguro — e chamar isso de 'jeito de ser'.",
+      "A auto-sabotagem vai parecer prudência até você perceber o quanto já deixou de fazer por causa disso."
+    ],
+    signs: [
+      "Medo de falar em público, dar opinião ou ser o centro das atenções",
+      "Depois de interações sociais, você analisa cada detalhe do que disse",
+      "Evita situações com risco de julgamento antes mesmo de tentar",
+      "Sintomas físicos fortes em momentos de exposição ou pressão"
+    ],
+    mechTag: "Como o Método Mente Inimiga age no seu perfil",
+    mechName: "Protocolo de Reprogramação da Narrativa Interna",
+    mechDesc: "Uma sequência que trabalha diretamente a voz interna que julga antes dos outros julgarem — e substitui o ciclo de esquiva por um ciclo de confiança construída em ação.",
+    bullets: [
+      { strong: "Reprogramação da narrativa interna de julgamento", detail: " — a técnica que desfaz o padrão 'todo mundo está me observando' sem precisar fingir que não se importa." },
+      { strong: "Técnica de regulação corporal antes de situações de pressão", detail: " — 4 minutos antes de uma apresentação, reunião ou conversa difícil, com resultado mensurável desde a primeira vez." },
+      { strong: "Como construir confiança real sem precisar da aprovação alheia", detail: " — porque buscar validação externa cria uma dependência que faz você recuar toda vez que ela não vem." },
+      { strong: "Plano de 7 dias para reinstalar a calma como estado padrão", detail: " — com exposições graduais planejadas para expandir sua zona de conforto sem trauma." }
+    ],
+    testimonial: {
+      text: "Eu travava antes de qualquer reunião importante. Meu coração disparava. Parecia exagero mesmo. Depois de uma semana com o protocolo, fiz uma apresentação para 30 pessoas e me surpreendi com a minha própria calma.",
+      author: "Juliana R., 31 anos",
+      tag: "Perfil: Performance"
+    },
+    cta: "Quero parar de me sabotar por medo do julgamento →"
+  },
+  E: {
+    tag: "Perfil identificado",
+    title: 'Ansiedade <em>Existencial e de Sobrecarga</em>',
+    subtitle: "Não é frescura. É o peso de existir sem direção clara — e seu sistema nervoso está avisando.",
+    core: `Sua ansiedade tem raízes mais profundas do que a maioria percebe. Não é falta de gratidão, não é fraqueza, não é drama. É uma <strong>desconexão entre o que você vive e o que você sente que deveria viver.</strong> Você pode ter emprego, família, saúde — e ainda assim carregar uma sensação de que algo essencial está faltando. Isso <strong>esgota o sistema nervoso de uma forma que nenhum descanso físico resolve.</strong>`,
+    ampTitle: "Sem nomear e tratar essa raiz, é o que vai continuar:",
+    ampItems: [
+      "Você vai continuar se sentindo esgotado por coisas pequenas, sem conseguir explicar por quê.",
+      "Os momentos de paz vão ser curtos e sempre interrompidos pelo mesmo vazio sem nome.",
+      "Vai ficar buscando mudanças externas — emprego novo, cidade nova, relacionamento novo — esperando que algo cure o que é interno.",
+      "A sensação de não pertencer ao próprio momento vai crescer com o tempo, não diminuir sozinha."
+    ],
+    signs: [
+      "Sensação de vazio ou falta de propósito — mesmo com a vida objetivamente 'estável'",
+      "Esgotamento fácil: qualquer mudança ou novidade soa como ameaça",
+      "Dificuldade de se sentir presente e conectado com o que está acontecendo",
+      "A ansiedade aparece mais quando você está quieto e sem estímulo"
+    ],
+    mechTag: "Como o Método Mente Inimiga age no seu perfil",
+    mechName: "Protocolo de Reconexão com Propósito e Aterramento",
+    mechDesc: "Uma abordagem que primeiro estabiliza o sistema nervoso sobrecarregado — e depois constrói a base para uma reconexão com o que dá sentido, sem precisar 'mudar tudo' de uma vez.",
+    bullets: [
+      { strong: "Exercício de aterramento para sair do espiral existencial", detail: " — quando o vazio bate, esse protocolo de 6 minutos traz você de volta ao presente sem forçar positividade." },
+      { strong: "Como reconectar com propósito sem precisar mudar tudo", detail: " — porque grandes mudanças feitas do lugar errado só aumentam o caos interno." },
+      { strong: "Técnica de descarga emocional para dias de sobrecarga", detail: " — um método simples de externalização que esvazia o que está pesando antes de dormir." },
+      { strong: "Plano de 7 dias para reinstalar a calma como estado padrão", detail: " — começando pelo sistema nervoso, não pela filosofia de vida." }
+    ],
+    testimonial: {
+      text: "Eu vivia falando que estava bem mas me sentindo vazia. Ninguém ao meu redor entendia. O diagnóstico de ansiedade existencial foi a primeira vez que algo fez sentido. O material me deu palavras e depois caminhos.",
+      author: "Renata C., 37 anos",
+      tag: "Perfil: Existencial"
+    },
+    cta: "Quero reconectar com o que dá sentido e parar de me sentir vazia →"
+  }
+};
+
+// ── STATE ──
+let currentQ = 0;
+const scores = { A: 0, R: 0, S: 0, E: 0 };
+let timerInterval;
+let timerSeconds = 15 * 60;
+
+// ── RENDER QUESTION ──
+function renderQuestion() {
+  const q = questions[currentQ];
+  const pct = Math.round((currentQ / questions.length) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('step-label').textContent = `Pergunta ${currentQ + 1} de ${questions.length}`;
+  document.getElementById('step-pct').textContent = pct + '%';
+
+  const card = document.getElementById('question-card');
+  card.innerHTML = `
+    <div class="question-num">Pergunta ${currentQ + 1} de ${questions.length}</div>
+    <div class="question-text">${q.text}</div>
+    <div class="options">
+      ${q.options.map((opt, i) => `
+        <button class="option" onclick="selectOption(${i})">
+          <span class="opt-icon">${opt.icon}</span>
+          <span class="opt-text">${opt.text}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  card.style.animation = 'none';
+  setTimeout(() => { card.style.animation = 'fadeIn 0.4s ease'; }, 10);
+}
+
+function selectOption(i) {
+  const weights = questions[currentQ].weights;
+  Object.keys(weights).forEach(k => { scores[k] += weights[k][i]; });
+
+  currentQ++;
+  if (currentQ < questions.length) {
+    renderQuestion();
+  } else {
+    showLoading();
+  }
+}
+
+// ── LOADING ──
+const loadingSteps = [
+  'Mapeando o modo de operação da sua mente...',
+  'Identificando como sua mente inimiga age...',
+  'Localizando o ponto fraco dela...',
+  'Sua mente inimiga foi identificada.'
+];
+
+function showLoading() {
+  document.getElementById('quiz-section').style.display = 'none';
+  const ls = document.getElementById('loading-section');
+  ls.style.display = 'block';
+  let step = 0;
+  const stepEl = document.getElementById('loading-step');
+  const iv = setInterval(() => {
+    stepEl.textContent = loadingSteps[step] || '';
+    step++;
+    if (step > loadingSteps.length) { clearInterval(iv); }
+  }, 600);
+  setTimeout(showResult, 2800);
+}
+
+// ── SHOW RESULT ──
+function showResult() {
+  document.getElementById('loading-section').style.display = 'none';
+  const winner = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+  const p = profiles[winner];
+  const destParams = new URLSearchParams(window.location.search);
+  destParams.set('perfil', winner);
+  const destUrl = `vendas-mente-livre.html?${destParams.toString()}`;
+
+  const rs = document.getElementById('result-section');
+  rs.style.display = 'block';
+
+  rs.innerHTML = `
+    <div class="result-eyebrow">✦ Mente Inimiga Identificada ✦</div>
+    <h2 class="result-title">${p.title}</h2>
+    <p class="result-subtitle">${p.subtitle}</p>
+
+    <div class="result-core">
+      <div class="core-label">O que está acontecendo com você</div>
+      <p class="core-text">${p.core}</p>
+    </div>
+
+    <div class="amplification">
+      <div class="amp-label">⚠ Se isso não mudar</div>
+      <div class="amp-title">${p.ampTitle}</div>
+      <ul class="amp-list">
+        ${p.ampItems.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="signs-grid">
+      ${p.signs.map(s => `<div class="sign-item">${s}</div>`).join('')}
+    </div>
+
+    <div class="mechanism">
+      <div class="mech-tag">${p.mechTag}</div>
+      <div class="mech-name">${p.mechName}</div>
+      <p class="mech-desc">${p.mechDesc}</p>
+    </div>
+
+    <div class="timer-bar">
+      <span>⏳ Oferta especial para o seu perfil expira em</span>
+      <span class="timer-count" id="timer-display">15:00</span>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-badge">✦ Recomendado para o seu perfil</div>
+      <div class="offer-title">Método Mente Inimiga: O Método Âncora para Silenciar a Ansiedade de Dentro pra Fora</div>
+      <div class="offer-subtitle">Um sistema prático de 7 dias com técnicas validadas, adaptadas ao seu perfil — para desativar o padrão que identificamos nas suas respostas.</div>
+
+      <ul class="offer-bullets">
+        ${p.bullets.map(b => `
+          <li>
+            <span class="bullet-icon">✓</span>
+            <span><strong>${b.strong}</strong>${b.detail}</span>
+          </li>
+        `).join('')}
+      </ul>
+
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"${p.testimonial.text}"</p>
+        <div class="test-author">${p.testimonial.author} · <span>${p.testimonial.tag}</span></div>
+      </div>
+
+      <div class="price-block">
+        <div>
+          <div class="price-original">De R$ 97,00</div>
+          <div class="price-current"><span class="price-small">R$</span> 29,<span style="font-size:24px;font-family:Inter;font-weight:700">90</span></div>
+        </div>
+        <div class="discount-tag">70% OFF</div>
+      </div>
+
+      <a href="${destUrl}" class="cta-btn">${p.cta}</a>
+      <div class="cta-sub">
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><rect x="1" y="5" width="10" height="8" rx="2" stroke="#8A8FA8" stroke-width="1.5"/><path d="M4 5V4a2 2 0 114 0v1" stroke="#8A8FA8" stroke-width="1.5"/></svg>
+        Compra segura · Garantia de 7 dias · Acesso imediato
+      </div>
+    </div>
+  `;
+
+  startTimer();
+}
+
+// ── TIMER ──
+function startTimer() {
+  const el = document.getElementById('timer-display');
+  if (!el) return;
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) { clearInterval(timerInterval); timerSeconds = 0; }
+    const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+    const s = (timerSeconds % 60).toString().padStart(2, '0');
+    const d = document.getElementById('timer-display');
+    if (d) d.textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+// INIT
+renderQuestion();
+</script>
+</body>
+</html>
