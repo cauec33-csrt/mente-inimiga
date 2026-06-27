@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compra confirmada — Método Mente Inimiga</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0A0C10;
+  --bg2:#10141C;
+  --bg3:#161B26;
+  --text:#F0EDE8;
+  --muted:#717A96;
+  --accent:#8B6FE8;
+  --accent2:#A98FF5;
+  --cta:#E9A86C;
+  --green:#5DB87A;
+  --border:rgba(255,255,255,0.06);
+  --border-a:rgba(139,111,232,0.3);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+
+.page{
+  max-width:560px;
+  margin:0 auto;
+  padding:0 20px 60px;
+}
+
+/* ── TOPO CONFIRMAÇÃO ── */
+.confirm-bar{
+  background:rgba(93,184,122,0.1);
+  border-bottom:1px solid rgba(93,184,122,0.2);
+  padding:12px 20px;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+  color:var(--green);
+  letter-spacing:.01em;
+}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;
+  padding:52px 0 40px;
+  position:relative;
+}
+
+.hero::before{
+  content:'';
+  position:absolute;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  width:400px;height:300px;
+  background:radial-gradient(ellipse,rgba(93,184,122,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+.check-circle{
+  width:80px;height:80px;
+  background:rgba(93,184,122,0.12);
+  border:2px solid rgba(93,184,122,0.4);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 24px;
+  font-size:32px;
+  position:relative;
+  animation:popIn .5s cubic-bezier(.2,.8,.3,1) both;
+}
+
+@keyframes popIn{
+  from{transform:scale(0);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.hero-label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--green);
+  margin-bottom:12px;
+  display:block;
+}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,7vw,38px);
+  font-weight:900;
+  line-height:1.15;
+  color:var(--text);
+  margin-bottom:12px;
+}
+
+.hero-title em{
+  font-style:italic;
+  color:var(--accent);
+}
+
+.hero-sub{
+  font-size:15px;
+  color:var(--muted);
+  line-height:1.75;
+  max-width:420px;
+  margin:0 auto;
+}
+
+.hero-sub strong{color:var(--text)}
+
+/* ── EMAIL CARD ── */
+.email-card{
+  background:var(--bg2);
+  border:1px solid var(--border-a);
+  border-radius:16px;
+  padding:24px 22px;
+  margin:32px 0;
+  text-align:center;
+}
+
+.email-icon{
+  font-size:36px;
+  margin-bottom:14px;
+  display:block;
+}
+
+.email-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:8px;
+}
+
+.email-body{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:16px;
+}
+
+.email-body strong{color:var(--text)}
+
+.email-tip{
+  background:rgba(233,168,108,0.07);
+  border:1px solid rgba(233,168,108,0.2);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+  text-align:left;
+}
+
+.email-tip strong{color:var(--cta)}
+
+/* ── PRÓXIMOS PASSOS ── */
+.steps-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:16px;
+  text-align:center;
+}
+
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:36px;
+}
+
+.step{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  padding:16px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.step-num{
+  width:32px;height:32px;
+  background:rgba(139,111,232,0.12);
+  border:1px solid var(--border-a);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:700;
+  color:var(--accent);
+  flex-shrink:0;
+}
+
+.step-title{
+  font-size:14px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:3px;
+}
+
+.step-desc{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* ── MENSAGEM FINAL ── */
+.final-card{
+  background:var(--bg2);
+  border:1px solid var(--border-a);
+  border-top:3px solid var(--accent);
+  border-radius:16px;
+  padding:28px 24px;
+  text-align:center;
+  margin-bottom:36px;
+}
+
+.final-quote{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(16px,4vw,20px);
+  font-style:italic;
+  color:var(--text);
+  line-height:1.65;
+  margin-bottom:16px;
+}
+
+.final-divider{
+  width:48px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,111,232,.5),transparent);
+  margin:16px auto;
+}
+
+.final-marca{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+
+/* ── GARANTIA ── */
+.garantia{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:16px;
+  background:rgba(93,184,122,0.05);
+  border:1px solid rgba(93,184,122,0.18);
+  border-radius:12px;
+  margin-bottom:32px;
+}
+
+.g-icon{font-size:24px;flex-shrink:0}
+.g-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:3px}
+.g-text{font-size:12px;color:var(--muted);line-height:1.6}
+.g-text strong{color:var(--text)}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.8;
+  border-top:1px solid var(--border);
+  padding-top:24px;
+}
+
+footer a{color:var(--accent);text-decoration:none}
+
+/* ── MOBILE ── */
+@media(max-width:480px){
+  .page{padding:0 16px 48px}
+  .hero{padding:40px 0 32px}
+  .email-card{padding:20px 16px}
+  .final-card{padding:22px 16px}
+  .hero-title{font-size:26px}
+  .step{padding:14px}
+}
+
+@media(max-width:380px){
+  .page{padding:0 12px 40px}
+  .hero-title{font-size:23px}
+  .check-circle{width:68px;height:68px;font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<!-- BARRA DE CONFIRMAÇÃO -->
+<div class="confirm-bar">
+  ✅ Pagamento confirmado — bem-vindo ao Método Mente Inimiga
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="check-circle">✓</div>
+    <span class="hero-label">Compra realizada com sucesso</span>
+    <h1 class="hero-title">Você acabou de dar o<br>primeiro passo para<br><em>virar o jogo.</em></h1>
+    <p class="hero-sub">
+      Sua mente inimiga vai continuar tentando. Mas agora você tem as ferramentas para <strong>identificá-la e desativá-la.</strong>
+    </p>
+  </section>
+
+  <!-- EMAIL -->
+  <div class="email-card">
+    <span class="email-icon">📧</span>
+    <div class="email-title">Seu acesso está no e-mail</div>
+    <p class="email-body">
+      O <strong>Método Mente Inimiga</strong> foi enviado para o e-mail cadastrado na compra. Verifique sua caixa de entrada nos próximos minutos.
+    </p>
+    <div class="email-tip">
+      <strong>⚠️ Não chegou?</strong> Verifique a pasta de <strong>spam</strong> ou <strong>promoções</strong>. O e-mail vem com o assunto <strong>"Método Mente Inimiga — seu acesso"</strong>.
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="steps-title">O que fazer agora</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Abra o e-mail e acesse o material</div>
+        <div class="step-desc">Clique no link enviado pela Kiwify para baixar o PDF ou acessar o material digital.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Leia a Parte 1 primeiro</div>
+        <div class="step-desc">Entenda o conceito de mente inimiga e identifique o seu modo de operação antes de começar o protocolo.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Vá direto para a seção do seu perfil</div>
+        <div class="step-desc">Você já sabe seu modo — foi identificado no quiz. Antecipação, Loop, Julgamento ou Sobrecarga. Cada um tem um protocolo específico.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Aplique o Dia 1 hoje</div>
+        <div class="step-desc">Não deixe para amanhã. O primeiro dia leva menos de 15 minutos — e é o mais importante de todos.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENSAGEM FINAL -->
+  <div class="final-card">
+    <div class="final-quote">
+      "Você não estava fraco.<br>
+      Você estava sem mapa.<br>
+      Agora tem um."
+    </div>
+    <div class="final-divider"></div>
+    <div class="final-marca">✦ Método Mente Inimiga ✦</div>
+  </div>
+
+  <!-- GARANTIA -->
+  <div class="garantia">
+    <div class="g-icon">🛡️</div>
+    <div>
+      <div class="g-title">Lembre-se: você tem 7 dias de garantia</div>
+      <div class="g-text">Se aplicar o método e não sentir nenhuma diferença nos primeiros 7 dias, <strong>devolvemos 100% do valor</strong> sem perguntas. Basta enviar um e-mail para suporte.</div>
+    </div>
+  </div>
+
+  <footer>
+    Método Mente Inimiga · vidaplenadigital.net.br<br>
+    Dúvidas? <a href="mailto:contato@vidaplenadigital.net.br">contato@vidaplenadigital.net.br</a><br><br>
+    © 2025 Método Mente Inimiga · Todos os direitos reservados
+  </footer>
+
+</div>
+
+</body>
+</html>
